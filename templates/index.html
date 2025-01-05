@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Client</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = io.connect('http://' + document.domain + ':' + location.port);
+
+            socket.on('connect', () => {
+                console.log('Connecté au serveur.');
+                socket.send('Bonjour serveur, ceci est un message depuis le client.');
+            });
+
+            socket.on('message', (data) => {
+                const messageContainer = document.getElementById('messages');
+                const newMessage = document.createElement('div');
+                newMessage.textContent = data;
+                messageContainer.appendChild(newMessage);
+            });
+
+            document.getElementById('sendButton').addEventListener('click', () => {
+                const input = document.getElementById('messageInput').value;
+                socket.send(input);
+                document.getElementById('messageInput').value = '';
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>WebSocket avec Flask</h1>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Tapez votre message ici">
+    <button id="sendButton">Envoyer</button>
+</body>
+</html>
